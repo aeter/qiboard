@@ -12,10 +12,16 @@
     %link{rel: "stylesheet", href: "https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"}
     %script{src: "http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"}
     %script{src: "https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"}
+    %script{src: "https://cdn.datatables.net/plug-ins/1.10.19/dataRender/ellipsis.js"}
+
 
     :javascript
       $(document).ready(function() {
-        $('table.datatables').DataTable({});
+        $('table.datatables').DataTable({
+          columnDefs: [
+            {targets: 2, render: $.fn.dataTable.render.ellipsis( 300, true )}
+          ]
+        });
       });
   %body
     %nav.navbar.navbar-dark.bg-dark
