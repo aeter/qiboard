@@ -1,17 +1,16 @@
 setup:
-	gem install bundler --conservative
-	bundle install
+	bundle install --path vendor/bundle --binstubs
 
 crontab:
-	whenever --update-crontab
+	bundle exec whenever --update-crontab
 
 crontab_rm:
-	whenever --clear-crontab
+	bundle exec whenever --clear-crontab
 
 data:
-	ruby data/populate_db.rb
+	bundle exec ruby data/populate_db.rb
 
 server:
-	ruby server.rb
+	bundle exec ruby server.rb
 
 .PHONY: data

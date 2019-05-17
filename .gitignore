@@ -3,5 +3,8 @@
 /vendor/bundle
 /lib/bundler/man/
 
+# binstubs
+bin/
+
 db.sqlite
 all.log
