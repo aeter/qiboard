@@ -1,0 +1,46 @@
+!!!
+%html
+  %head
+    %meta{charset: "UTF-8"}
+    %title QIboard
+
+    %link{rel: "stylesheet", href: "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"}
+    %script{src: "https://code.jquery.com/jquery-3.3.1.slim.min.js"}
+    %script{src: "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"}
+    %script{src: "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"}
+
+    %link{rel: "stylesheet", href: "https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"}
+    %script{src: "http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"}
+    %script{src: "https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"}
+
+    :javascript
+      $(document).ready(function() {
+        $('table.datatables').DataTable({});
+      });
+  %body
+    %nav.navbar.navbar-dark.bg-dark
+      %a{class: "navbar-brand", href: "#"} QIboard
+
+    .card
+      .card-header
+        %form{method: "GET", action: "/"}
+          .form-group
+            %textarea.form-control{rows: "2", id: "query", name: "query"}
+              = params["query"]
+            %input.btn.btn-primary{type: "submit", value: "Run Query"}
+      .card-body
+        %table.table.table-bordered.table-striped.datatables
+          %thead
+            %tr
+              %th feed
+              %th title
+              %th content
+              %th pub_date
+          %tbody
+            - @jobs.each do |job|
+              %tr
+                %td= job["feed_name"]
+                %td
+                  %a{href: job["link"]}= job["title"]
+                %td= job["content"]
+                %td= job["pub_date"]
