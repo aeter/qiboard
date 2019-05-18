@@ -6,8 +6,8 @@ DATABASE = SQLite3::Database.new "db.sqlite"
 DATABASE.results_as_hash = true
 
 get '/' do
-  params["query"] = "select * from jobs limit 1" unless params["query"]
-  @jobs = DATABASE.execute(params["query"])
+  @query = params["query"] ? params["query"] : "SELECT * FROM jobs LIMIT 1"
+  @jobs = DATABASE.execute(@query)
 
   haml :index
 end

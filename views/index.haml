@@ -32,13 +32,13 @@
         %form{method: "GET", action: "/"}
           .form-group
             %textarea.form-control{rows: "2", id: "query", name: "query"}
-              = params["query"]
+              = @query
             %input.btn.btn-primary{type: "submit", value: "Run Query"}
       .card-body
         %table.table.table-bordered.table-striped.datatables
           %thead
             %tr
-              %th feed
+              %th feed_name
               %th title
               %th content
               %th pub_date
