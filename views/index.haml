@@ -12,15 +12,12 @@
     %link{rel: "stylesheet", href: "https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"}
     %script{src: "http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"}
     %script{src: "https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"}
-    %script{src: "https://cdn.datatables.net/plug-ins/1.10.19/dataRender/ellipsis.js"}
 
 
     :javascript
       $(document).ready(function() {
-        $('table.datatables').DataTable({
-          columnDefs: [
-            {targets: 2, render: $.fn.dataTable.render.ellipsis( 300, true )}
-          ]
+        $('.datatables').DataTable({
+          "aaSorting" : [] // don't sort any table column initially - unless sort arrow clicked
         });
       });
   %body
@@ -35,18 +32,14 @@
               = @query
             %input.btn.btn-primary{type: "submit", value: "Run Query"}
       .card-body
+        - keys = @result&.first&.keys.to_a.sort.select { |x| !["feed_url", "created_at"].include?(x) }
         %table.table.table-bordered.table-striped.datatables
           %thead
             %tr
-              %th feed_name
-              %th title
-              %th content
-              %th pub_date
+              - keys.each do |key|
+                %th= key
           %tbody
-            - @jobs.each do |job|
+            - @result.to_a.each do |r|
               %tr
-                %td= job["feed_name"]
-                %td
-                  %a{href: job["link"]}= job["title"]
-                %td= job["content"]
-                %td= job["pub_date"]
+                - keys.each do |key|
+                  %td= r[key]
