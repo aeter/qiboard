@@ -1,4 +1,6 @@
 ### Local setup
+The server is intended to be used locally (like a desktop app).
+
 ```
 $ make setup
 $ make data

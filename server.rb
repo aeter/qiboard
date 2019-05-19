@@ -6,7 +6,8 @@ DATABASE = SQLite3::Database.new "db.sqlite"
 DATABASE.results_as_hash = true
 
 get '/' do
-  @query = params["query"] ? params["query"] : "SELECT * FROM jobs LIMIT 1"
+  # such security. wow.
+  @query = params["query"].to_s.downcase.start_with?("select") ? params["query"] : "SELECT * FROM jobs LIMIT 1"
   @jobs = DATABASE.execute(@query)
 
   haml :index
