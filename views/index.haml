@@ -19,6 +19,14 @@
         $('.datatables').DataTable({
           "aaSorting" : [] // don't sort any table column initially - unless sort arrow clicked
         });
+
+        // handle modal dialog
+        $('#modal_long').on('show.bs.modal', function (event) {
+          var button = $(event.relatedTarget) // Button that triggered the modal
+          var recipient = button.data('whatever') // Extract info from data-* attributes
+          var modal = $(this)
+          modal.find('.modal-body').html(recipient)
+        })
       });
   %body
     %nav.navbar.navbar-dark.bg-dark
@@ -45,9 +53,22 @@
                   - if key == "content"
                     - content = remove_html_tags(r[key]).to_s
                     %td
-                      %span{title: content}= content[0..400] + " ..."
+                      %span{title: content}= content[0..100] + " ..."
+                      %button.btn.btn-primary.float-right{type: "button", "data-toggle": "modal", "data-target": "#modal_long", "data-whatever": r[key].to_s} More info
                   - elsif key == "link"
                     %td
                       %a{href: r[key]}= "Link"
                   - else
                     %td= r[key]
+
+    .modal.fade{id: "modal_long", tabindex: "-1", role: "dialog",  "aria-labelledby": "modal_long_title", "aria-hidden": "true"}
+      .modal-dialog.modal-lg{role: "document"}
+        .modal-content 
+          .modal-header
+            %h5.modal-title{id: "modal_long_title"} Description
+            %button.close{type: "button", "data-dismiss": "modal", "aria-label": "Close"}
+              %span{"aria-hidden": "true"} &times;
+          .modal-body
+          .modal-footer
+            %button.btn.btn-secondary{type: "button", "data-dismiss": "modal"} Close
+
