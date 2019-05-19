@@ -40,7 +40,7 @@
               = @query
             %input.btn.btn-primary{type: "submit", value: "Run Query"}
       .card-body
-        - keys = @results&.first&.keys.to_a.sort.select { |x| !["feed_url", "created_at"].include?(x) }
+        - keys = @results&.first&.keys.to_a.sort.reverse.select { |x| !["feed_url", "created_at"].include?(x) }
         %table.table.table-bordered.table-striped.datatables
           %thead
             %tr
@@ -53,7 +53,7 @@
                   - if key == "content"
                     - content = remove_html_tags(r[key]).to_s
                     %td
-                      %span{title: content}= content[0..100] + " ..."
+                      %span= content[0..200] + " ..."
                       %button.btn.btn-primary.float-right{type: "button", "data-toggle": "modal", "data-target": "#modal_long", "data-whatever": r[key].to_s} More info
                   - elsif key == "link"
                     %td
