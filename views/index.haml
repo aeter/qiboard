@@ -43,7 +43,9 @@
               %tr
                 - keys.each do |key|
                   - if key == "content"
-                    %td&= remove_html_tags(r[key])
+                    - content = remove_html_tags(r[key]).to_s
+                    %td
+                      %span{title: content}= content[0..400] + " ..."
                   - elsif key == "link"
                     %td
                       %a{href: r[key]}= "Link"
