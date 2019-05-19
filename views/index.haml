@@ -32,14 +32,20 @@
               = @query
             %input.btn.btn-primary{type: "submit", value: "Run Query"}
       .card-body
-        - keys = @result&.first&.keys.to_a.sort.select { |x| !["feed_url", "created_at"].include?(x) }
+        - keys = @results&.first&.keys.to_a.sort.select { |x| !["feed_url", "created_at"].include?(x) }
         %table.table.table-bordered.table-striped.datatables
           %thead
             %tr
               - keys.each do |key|
                 %th= key
           %tbody
-            - @result.to_a.each do |r|
+            - @results.to_a.each do |r|
               %tr
                 - keys.each do |key|
-                  %td= r[key]
+                  - if key == "content"
+                    %td&= remove_html_tags(r[key])
+                  - elsif key == "link"
+                    %td
+                      %a{href: r[key]}= "Link"
+                  - else
+                    %td= r[key]
