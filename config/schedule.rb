@@ -23,6 +23,6 @@ set :output, "all.log"
 
 job_type :cd_and_run_command, "cd :path && :task :output"
 
-every 1.day, at: ['9:25 am', '9:25 pm'] do
+every 1.day, at: ['9:25 am', '1:55 pm', '9:25 pm'] do
   cd_and_run_command "make data"
 end
