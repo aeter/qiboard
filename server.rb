@@ -15,6 +15,6 @@ end
 
 helpers do
   def remove_html_tags(s)
-    s.gsub(/<[^>]*>/ui,'')
+    s.to_s.gsub(/<[^>]*>/ui,'')
   end
 end
