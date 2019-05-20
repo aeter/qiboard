@@ -102,7 +102,7 @@ class Tagger
   end
 
   def salary
-	  # again, very basic regex - and sometimes gives false positives.
+    # again, very basic regex - and sometimes gives false positives.
     salary = @text_downcased.scan(/(\$?\£?\€?\d+(?:k|K))/u).flatten.last
     salary = "" if salary.to_s.downcase == "401k" # this is USA's pensions fund name, not a salary value
     [salary]
