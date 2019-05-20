@@ -54,10 +54,19 @@
             $('#submit_query').trigger('click');
           }
         });
+
+        $('.toast').toast('show');
       });
   %body.container
     %nav.navbar.navbar-dark.bg-dark
       %a{class: "navbar-brand", href: "#"} QIboard
+
+      .toast.float-right{role: "alert", "aria-live": "polite", "aria-atomic": "true", "data-delay": "5000"}
+        %div{style: "position: absolute; top: 0; right: 0;"}
+        .toast-body
+          %strong The query editor uses Vim keybindings
+          %button.close{type: "button", "data-dismiss": "toast", "aria-label": "Close"}
+            %span{"aria-hidden": "true"} &times;
 
     .card
       .card-header
