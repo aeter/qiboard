@@ -7,14 +7,8 @@ DATABASE.results_as_hash = true
 
 get '/' do
   # such security. wow.
-  @query = params["query"].to_s.strip.downcase.start_with?("select") ? params["query"] : "SELECT * FROM jobs LIMIT 1"
+  @query = params["query"].to_s.strip.downcase.start_with?("select") ? params["query"] : "SELECT * FROM jobs LIMIT 3"
   @results = DATABASE.execute(@query)
 
   haml :index
-end
-
-helpers do
-  def remove_html_tags(s)
-    s.to_s.gsub(/<[^>]*>/ui,'')
-  end
 end

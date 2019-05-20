@@ -4,20 +4,30 @@
     %meta{charset: "UTF-8"}
     %title QIboard
 
-    %link{rel: "stylesheet", href: "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"}
+    -# jquery (must be included before bootstrap and datatables)
     %script{src: "https://code.jquery.com/jquery-3.3.1.slim.min.js"}
+
+    -# bootstrap
+    %link{rel: "stylesheet", href: "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"}
     %script{src: "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"}
     %script{src: "https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"}
 
+    -# datatables
     %link{rel: "stylesheet", href: "https://cdn.datatables.net/1.10.19/css/dataTables.bootstrap4.min.css"}
     %script{src: "http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"}
     %script{src: "https://cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js"}
 
+    -# codemirror
+    %link{rel: "stylesheet", href: "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.41.0/codemirror.css"}
+    %link{rel: "stylesheet", href: "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.41.0/theme/material.min.css"}
+    %script{src: "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.41.0/codemirror.min.js", type: "text/javascript"}
+    %script{src: "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.41.0/mode/sql/sql.min.js", type: "text/javascript"}
+    %script{src: "https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.46.0/keymap/vim.min.js", type: "text/javascript"}
 
     :javascript
       $(document).ready(function() {
         $('.datatables').DataTable({
-          "aaSorting" : [] // don't sort any table column initially - unless sort arrow clicked
+          "aaSorting" : [] // don't sort any table column initially
         });
 
         // handle modal dialog
@@ -27,8 +37,25 @@
           var modal = $(this)
           modal.find('.modal-body').html(recipient)
         })
+
+        // sql query editor
+        var editor = CodeMirror.fromTextArea(document.getElementById('query'), {
+          autofocus: true,
+          theme: 'material',
+          mode: 'text/x-sql',
+          keyMap: "vim",
+          lineNumbers: true
+        });
+        editor.setSize('100%', '100');
+
+        // bind Ctrl-Enter to submit the query
+        $(document).keypress(function(e) {
+          if (e.ctrlKey && e.keyCode == 13) {
+            $('#submit_query').trigger('click');
+          }
+        });
       });
-  %body
+  %body.container
     %nav.navbar.navbar-dark.bg-dark
       %a{class: "navbar-brand", href: "#"} QIboard
 
@@ -38,9 +65,9 @@
           .form-group
             %textarea.form-control{rows: "2", id: "query", name: "query"}
               = @query
-            %input.btn.btn-primary{type: "submit", value: "Run Query"}
+            %input.btn.btn-primary{type: "submit", value: "Run Query", id: "submit_query", "title": "(Ctrl + Enter)"}
       .card-body
-        - keys = @results&.first&.keys.to_a.sort.reverse.select { |x| !["feed_url", "created_at"].include?(x) }
+        - keys = @results&.first&.keys.to_a.sort.select { |x| !["feed_url", "created_at"].include?(x) }
         %table.table.table-bordered.table-striped.datatables
           %thead
             %tr
@@ -51,13 +78,17 @@
               %tr
                 - keys.each do |key|
                   - if key == "content"
-                    - content = remove_html_tags(r[key]).to_s
                     %td
-                      %span= content[0..200] + " ..."
-                      %button.btn.btn-primary.float-right{type: "button", "data-toggle": "modal", "data-target": "#modal_long", "data-whatever": r[key].to_s} More info
+                      %button.btn.btn-outline-primary.btn-sm{type: "button", "data-toggle": "modal", "data-target": "#modal_long", "data-whatever": r[key].to_s}
+                        = "More..."
                   - elsif key == "link"
                     %td
-                      %a{href: r[key]}= "Link"
+                      %a.badge{href: r[key]}
+                        = "☯ link"
+                  - elsif key == "tags"
+                    %td
+                      - r[key].split(",").each do |tag|
+                        %span.badge.badge-dark= tag
                   - else
                     %td= r[key]
 
